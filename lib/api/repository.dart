@@ -4,7 +4,7 @@ import 'package:flutter_api/model/post.dart';
 import 'package:http/http.dart' as http;
 
 class Repository {
-  final baseUrl = 'http://127.0.0.1:8080/api';
+  final baseUrl = 'http://192.168.0.19:8000/api';
 
   //get data with metode async
   Future<Map<String, dynamic>> fetchPosts(int page) async {
