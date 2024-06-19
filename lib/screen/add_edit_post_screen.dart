@@ -1,11 +1,18 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_api/api/repository.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'package:flutter_api/api/repository.dart';
+import 'package:flutter_api/model/post.dart';
+
 class AddEditPostScreen extends StatefulWidget {
-  const AddEditPostScreen({super.key});
+  final Post? post;
+  const AddEditPostScreen({
+    super.key,
+    this.post,
+  });
 
   @override
   State<AddEditPostScreen> createState() => _AddEditPostScreenState();
@@ -43,13 +50,39 @@ class _AddEditPostScreenState extends State<AddEditPostScreen> {
     super.dispose();
   }
 
+  @override
+  void initState() {
+    if (widget.post != null) {
+      _titleController.text = widget.post!.title;
+      _contentController.text = widget.post!.content;
+    }
+    super.initState();
+  }
+
   Future<void> _submitData() async {
-    if (_formKey.currentState!.validate() && _image != null) {
-      bool success = await apiService.insertPost(
-        _image,
-        _titleController.text,
-        _contentController.text,
-      );
+    if (_formKey.currentState!.validate()) {
+      bool success = false;
+      if (widget.post != null) {
+        success = await apiService.updatePost(
+          _image,
+          _titleController.text,
+          _contentController.text,
+          widget.post!.id,
+        );
+      } else if (_image != null) {
+        success = await apiService.insertPost(
+          _image,
+          _titleController.text,
+          _contentController.text,
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please Insert Image'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
 
       if (!mounted) return;
       if (success) {
@@ -67,7 +100,7 @@ class _AddEditPostScreenState extends State<AddEditPostScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Add New Post'),
+        title: Text(widget.post == null ? 'Add New Post' : 'Edit Post'),
       ),
       body: Form(
         key: _formKey,
@@ -138,7 +171,7 @@ class _AddEditPostScreenState extends State<AddEditPostScreen> {
                   width: double.infinity,
                   child: FilledButton(
                     onPressed: () => _submitData(),
-                    child: const Text('Submit'),
+                    child: Text(widget.post == null ? 'Submit' : 'Update'),
                   ),
                 ),
               ],

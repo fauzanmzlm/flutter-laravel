@@ -134,8 +134,20 @@ class _HomeState extends State<Home> {
                     top: 2,
                     right: 2,
                     child: IconButton(
-                      onPressed: () {
-                        // TODO action to edit post
+                      onPressed: () async {
+                        final result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddEditPostScreen(post: post),
+                          ),
+                        );
+
+                        if (result == true) {
+                          _currentPage = 1;
+                          _posts.clear();
+                          _hasMore = true;
+                          _loadPosts();
+                        }
                       },
                       icon: const Icon(Icons.edit_rounded),
                     ),
