@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_api/api/repository.dart';
 import 'package:flutter_api/component/post_view.dart';
 import 'package:flutter_api/model/post.dart';
+import 'package:flutter_api/screen/add_edit_post_screen.dart';
 
 class Home extends StatefulWidget {
   final String title;
@@ -89,8 +90,19 @@ class _HomeState extends State<Home> {
       ),
       body: _buildPostList(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          //TODO action to add and edit post
+        onPressed: () async {
+          var result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AddEditPostScreen(),
+            ),
+          );
+          if (result == true) {
+            _currentPage = 1;
+            _posts.clear();
+            _hasMore = true;
+            _loadPosts();
+          }
         },
         child: const Icon(Icons.add),
       ),
