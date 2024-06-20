@@ -13,10 +13,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme:
+            ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 13, 28, 146)),
         useMaterial3: true,
       ),
-      home: const Home(title: 'Tutorial Flutter Pemula'),
+      home: const Home(title: 'Flutter CRUD'),
     );
   }
 }
